@@ -1,0 +1,4 @@
+HappyMeter
+==========
+
+Track your happiness
