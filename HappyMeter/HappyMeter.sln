@@ -5,6 +5,10 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyMeter.Api", "HappyMeter.Api\HappyMeter.Api.csproj", "{65C1072C-1524-493A-97A6-4A93964D8465}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HappyMeter.Model", "HappyMeter.Model\HappyMeter.Model.csproj", "{A6AA031D-5F4C-405C-8BD8-83039343CB59}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{303CF27F-532A-4EBF-AED5-E3B5313DAA1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,10 @@ Global
 		{65C1072C-1524-493A-97A6-4A93964D8465}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65C1072C-1524-493A-97A6-4A93964D8465}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65C1072C-1524-493A-97A6-4A93964D8465}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6AA031D-5F4C-405C-8BD8-83039343CB59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6AA031D-5F4C-405C-8BD8-83039343CB59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6AA031D-5F4C-405C-8BD8-83039343CB59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6AA031D-5F4C-405C-8BD8-83039343CB59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

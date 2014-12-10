@@ -7,25 +7,36 @@ using Nancy.ModelBinding;
 
 namespace HappyMeter.Api.Modules
 {
-	public class MoodModule : Nancy.NancyModule
+	public class MoodModule : NancyModule
 	{
-		public MoodModule() : base("/mood")
+		private Raven.Client.IDocumentSession _session;
+
+		public MoodModule(Raven.Client.IDocumentSession session)
+			: base("/mood")
 		{
-			Get["/"] = _ => "Peter was here!";
+			_session = session;
 
-		    Post["/"] = parameter =>
-		    {
-		        var mood = this.Bind<Models.MoodModel>();
-		        mood.Id = Guid.NewGuid().ToString();
-		        mood.TimeStamp = DateTime.Now;
+			Get["/"] = _ =>
+			{
+				return "Hej"; // documentSession.Load<Model.MoodModel>();
+			};
 
-		        var response = new Response
-		        {
-		            StatusCode = HttpStatusCode.Created
-		        };
+			Post["/"] = parameter =>
+				{
+					var mood = this.Bind<Model.MoodModel>();
+					mood.Id = Guid.NewGuid().ToString();
+					mood.TimeStamp = DateTime.Now;
 
-		        return response;
-		    };
+					_session.Store(mood);
+					_session.SaveChanges();
+
+					var response = new Response
+					{
+						StatusCode = HttpStatusCode.Created,
+					};
+
+					return response;
+				};
 		}
 	}
 }
