@@ -18,7 +18,7 @@ namespace HappyMeter.Api.Modules
 
 			Get["/"] = _ =>
 			{
-				return "Hej"; // documentSession.Load<Model.MoodModel>();
+				return _session.Load<Model.MoodModel>();
 			};
 
 			Post["/"] = parameter =>
