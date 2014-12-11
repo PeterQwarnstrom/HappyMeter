@@ -8,45 +8,55 @@ using Nancy.ModelBinding;
 
 namespace HappyMeter.Api.Modules
 {
-    public class MoodModule : NancyModule
-    {
-        private Raven.Client.IDocumentSession _session;
+	public class MoodModule : NancyModule
+	{
+		private Raven.Client.IDocumentSession _session;
 
-        public MoodModule(Raven.Client.IDocumentSession session)
-            :base("/Moods")
-        {
-            _session = session;
+		public MoodModule(Raven.Client.IDocumentSession session)
+			: base("/{area}/Moods")
+		{
+			_session = session;
 
-            Get["/"] = _ =>
-            {
-                var result = _session.Query<Model.Mood>();
-                return Response.AsJson(result);
-            };
+			Get["/"] = parameter =>
+			{
+				string area = parameter.area;
+				
+				var result = _session.Query<Model.Mood>().Where(p => p.Area == area);
+				return Response.AsJson(result);
+			};
 
-            Get["/{id}"] = parameter =>
-            {
-                string id = parameter.id;
-                var result = _session.Load<Model.Mood>("Moods/" + id);
+			Get["/{id}"] = parameter =>
+			{
+				string area = parameter.area;
+				string id = parameter.id;
 
-                return result == null ? new Response { StatusCode = HttpStatusCode.NotFound } : Response.AsJson(result);
-            };
+				var result = _session.Load<Model.Mood>("Moods/" + id);
 
-            Post["/"] = parameter =>
-                {
-                    var mood = this.Bind<Model.Mood>();
-                    mood.TimeStamp = DateTime.Now;
+				if (result == null || result.Area != area)
+					return new Response { StatusCode = HttpStatusCode.NotFound };
 
-                    _session.Store(mood);
-                    _session.SaveChanges();
+				return Response.AsJson(result);
+			};
 
-                    var response = new Response
-                    {
-                        StatusCode = HttpStatusCode.Created
-                    };
-                    response.Headers["Location"] = mood.Id;
+			Post["/"] = parameter =>
+					{
+						string area = parameter.area;
+						
+						var mood = this.Bind<Model.Mood>();
+						mood.Area = area;
+						mood.TimeStamp = DateTime.Now;
 
-                    return response;
-                };
-        }
-    }
+						_session.Store(mood);
+						_session.SaveChanges();
+
+						var response = new Response
+						{
+							StatusCode = HttpStatusCode.Created
+						};
+						response.Headers["Location"] = mood.Id;
+
+						return response;
+					};
+		}
+	}
 }
