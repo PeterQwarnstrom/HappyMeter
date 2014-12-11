@@ -2,7 +2,7 @@
 
 namespace HappyMeter.Model
 {
-    public class MoodModel
+    public class Mood
     {
         public string Id { get; set; }
         public DateTime TimeStamp { get; set; }

@@ -8,37 +8,45 @@ using Nancy.ModelBinding;
 
 namespace HappyMeter.Api.Modules
 {
-	public class MoodModule : NancyModule
-	{
-		private Raven.Client.IDocumentSession _session;
+    public class MoodModule : NancyModule
+    {
+        private Raven.Client.IDocumentSession _session;
 
-		public MoodModule(Raven.Client.IDocumentSession session)
-			: base("/mood")
-		{
-			_session = session;
+        public MoodModule(Raven.Client.IDocumentSession session)
+            :base("/Moods")
+        {
+            _session = session;
 
-			Get["/"] = _ =>
-			{
-                var result = _session.Load<Model.MoodModel>();
-			    return Response.AsJson(result);
-			};
+            Get["/"] = _ =>
+            {
+                var result = _session.Query<Model.Mood>();
+                return Response.AsJson(result);
+            };
 
-			Post["/"] = parameter =>
-				{
-					var mood = this.Bind<Model.MoodModel>();
-					mood.Id = Guid.NewGuid().ToString();
-					mood.TimeStamp = DateTime.Now;
+            Get["/{id}"] = parameter =>
+            {
+                string id = parameter.id;
+                var result = _session.Load<Model.Mood>("Moods/" + id);
 
-					_session.Store(mood);
-					_session.SaveChanges();
+                return result == null ? new Response { StatusCode = HttpStatusCode.NotFound } : Response.AsJson(result);
+            };
 
-					var response = new Response
-					{
-						StatusCode = HttpStatusCode.Created,
-					};
+            Post["/"] = parameter =>
+                {
+                    var mood = this.Bind<Model.Mood>();
+                    mood.TimeStamp = DateTime.Now;
 
-					return response;
-				};
-		}
-	}
+                    _session.Store(mood);
+                    _session.SaveChanges();
+
+                    var response = new Response
+                    {
+                        StatusCode = HttpStatusCode.Created
+                    };
+                    response.Headers["Location"] = mood.Id;
+
+                    return response;
+                };
+        }
+    }
 }
