@@ -1,4 +1,5 @@
-﻿using Nancy;
+﻿using System.Net.Mime;
+using Nancy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,8 @@ namespace HappyMeter.Api.Modules
 
 			Get["/"] = _ =>
 			{
-				return _session.Load<Model.MoodModel>();
+                var result = _session.Load<Model.MoodModel>();
+			    return Response.AsJson(result);
 			};
 
 			Post["/"] = parameter =>
